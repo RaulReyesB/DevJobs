@@ -1,20 +1,37 @@
-const express = require('express')
-const exphbs = require('express-handlebars')
-const router = require('./routes');
-const path = require('path')
+const mongoose = require('mongoose')
+require('./config/db.js')
+
+const express = require("express");
+const exphbs = require("express-handlebars");
+const router = require("./routes");
+const path = require("path");
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const MongoStore = require('connect-mongo');
+
+require('dotenv').config({path: 'variables.env'});
 
 const app = express();
 
-//Aqui estamos habilitando handlebars como template engine 
-app.engine('handlebars', exphbs.engine({ defaultLayout: 'layout' }));
+//Aqui estamos habilitando handlebars como template engine
+app.engine("handlebars", exphbs.engine({ defaultLayout: "layout" }));
 
+app.set("view engine", "handlebars");
 
-app.set('view engine', 'handlebars')
+//definimos los archivos estaticos
+app.use(express.static(path.join(__dirname, "public")));
 
-//definimos los archivos estaticos 
-app.use(express.static(path.join(__dirname, 'public')))
+//
+app.use(cookieParser());
+app.use(session({
+  secret: process.env.SECRETO,
+  key: process.env.KEY,
+  resave: false,
+  saveUninitialized:false,
+  store: MongoStore.create({mongoUrl: process.env.DATABASE})
 
+}))
 
-app.use('/', router())
+app.use("/", router());
 
-app.listen(5000);
+app.listen(process.env.PUERTO);
