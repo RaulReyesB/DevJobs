@@ -1,11 +1,18 @@
-const mongoose = require('mongoose')
-require('dotenv').config({path: 'variables.env'});
+const mongoose = require('mongoose');
+require('dotenv').config({ path: 'variables.env' });
 
-mongoose.connect(process.env.DATABASE, {useNewUrlParser:true})
+mongoose.connect(process.env.DATABASE, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 mongoose.connection.on('error', (error) => {
-  console.log(error);
-})
+  console.error('Error en la conexión a la base de datos:', error);
+});
 
-//Importacion de los modelos
-require('../models/Vacantes.js')
+mongoose.connection.once('open', () => {
+  console.log('Conexión exitosa a la base de datos');
+});
+
+// Importación de los modelos
+require('../models/Vacantes.js');
