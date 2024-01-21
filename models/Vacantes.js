@@ -1,49 +1,57 @@
-const mongoose = require('mongoose');
-
+const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-const slug=require('slug');
-const shortid = require('shortid')
+const slug = require("slug");
+const shortid = require("shortid");
+
+
 
 const vacantesSchema = new mongoose.Schema({
-  titulo:{
+  titulo: {
     type: String,
-    require: 'El nombre de la vacante es obligatorio',
-    trim: true
+    require: "El nombre de la vacante es obligatorio",
+    trim: true,
   },
-  empresa:{
-    type:String,
-    trim:true
+  empresa: {
+    type: String,
+    trim: true,
   },
-  ubicacion:{
-    type:String,
-    trim:true,
-    required: 'La ubicacion es obligatoria'
+  ubicacion: {
+    type: String,
+    trim: true,
+    required: "La ubicacion es obligatoria",
   },
-  contrato:{
-    type:String,
-    trim:true
+  salario: {
+    type: String,
+    default: 0,
+    trim: true,
   },
-  descripcion:{
-    type:String,
-    trim:true
+  contrato: {
+    type: String,
+    trim: true,
   },
-  url:{
-    type:String,
-    lowercase:true
+  descripcion: {
+    type: String,
+    trim: true,
+  },
+  url: {
+    type: String,
+    lowercase: true,
   },
   skills: [String],
-  candidatos: [{
-    nombre: String,
-    email: String,
-    cv: String
-  }]
-})
-vacantesSchema.pre('save', function(next){
+  candidatos: [
+    {
+      nombre: String,
+      email: String,
+      cv: String,
+    },
+  ],
+});
+vacantesSchema.pre("save", function (next) {
   //crear la url
   const url = slug(this.titulo);
-this.url= `${url}-${shortid.generate()}`;
+  this.url = `${url}-${shortid.generate()}`;
 
-  next()
-})
+  next();
+});
 
-module.exports =mongoose.model('Vacante', vacantesSchema)
+module.exports = mongoose.model("Vacante", vacantesSchema);

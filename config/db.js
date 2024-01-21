@@ -16,3 +16,4 @@ mongoose.connection.once('open', () => {
 
 // Importación de los modelos
 require('../models/Vacantes.js');
+require('../models/Usuarios.js');

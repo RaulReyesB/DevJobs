@@ -9,6 +9,8 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const bodyParser = require("body-parser");
+const expressValidator = require('express-validator');
+const flash = require('connect-flash')
 
 require("dotenv").config({ path: "variables.env" });
 
@@ -18,12 +20,16 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//validacion  de campos
+const { check, validationResult } = require('express-validator');
+
 //Aqui estamos habilitando handlebars como template engine
 app.engine(
   "handlebars",
   exphbs.engine({
     defaultLayout: "layout",
     helpers: require("./helpers/handlebars"),
+    allowProtoPropertiesByDefault: true, 
   })
 );
 
@@ -43,6 +49,15 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DATABASE }),
   })
 );
+
+//Alertas y flash mensajes
+app.use(flash())
+
+//crear nuestro porpio middleware
+app.use((req, res, next) => {
+  res.locals.mensajes = req.flash()
+  next()
+})
 
 app.use("/", router());
 
