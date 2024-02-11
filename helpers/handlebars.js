@@ -54,13 +54,12 @@ module.exports = {
 
     let html = "";
     if (categoria.length) {
-      errores[categoria].forEach(error => {
+      errores[categoria].forEach((error) => {
         html += `<div class="${categoria} alerta">
           ${error}
         </div>`;
       });
     }
-    console.log(html)
-    //console.log(alertas.fn())
+    return alertas.fn().html = html;
   },
 };
